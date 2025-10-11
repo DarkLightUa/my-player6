@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title></title>
-    <!-- Preconnect for faster loading -->
+    
     <link rel="preconnect" href="https://cdnjs.cloudflare.com">
     <link rel="preconnect" href="https://snrt.player.easybroadcast.io">
     <link rel="preconnect" href="https://blogger.googleusercontent.com">
@@ -64,7 +64,7 @@
             100% { opacity: 0; }
         }
         
-        /* Loading image container */
+        
         .loading-image {
             position: absolute;
             top: 0;
@@ -90,7 +90,7 @@
             pointer-events: none;
         }
         
-        /* Live badge */
+        
         .live-badge {
             position: absolute;
             top: 15px;
@@ -122,11 +122,11 @@
             100% { opacity: 1; }
         }
         
-        /* REMOVED: Viewer count styles */
+        
     </style>
 </head>
 <body>
-    <!-- Loading image -->
+    
     <div class="loading-image" id="loadingImage">
         <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiZmRslaovrVP07DAR3DXHelJJx1FOAqt_-LyC5mGL0rC6nw28ZMku-kZ9C1gfdd09gRI85vsKgpE19r50rwM3_2rtMn_qGQg6Wk1KEaQy1GYWxpLDoi-Qt9gCa_ToPpsFrwTLzVPCEaYg7V_-E79uUIoUlYNVccisZZq8So82F9iEy7SkDMI2ZGlbgq-h4/s320/Untitled%20design%20-%202025-09-20T011659.168.png" alt="Loading">
     </div>
@@ -134,15 +134,15 @@
     <div id="player-container">
         <div class="fullscreen-message"></div>
         
-        <!-- Live badge only -->
+       
         <div class="live-badge">
             <div class="live-dot"></div>
             LIVE
         </div>
         
-        <!-- REMOVED: Viewer count element -->
+       
         
-        <!-- Player iframe -->
+       
         <iframe id="player-frame" 
                 src="https://snrt.player.easybroadcast.io/events/73_almaghribia_83tz85q" 
                 allow="autoplay; fullscreen"
@@ -154,11 +154,11 @@
             const playerFrame = document.getElementById('player-frame');
             const loadingImage = document.getElementById('loadingImage');
             
-            // Set player to fill the entire screen
+          
             playerFrame.style.width = '100%';
             playerFrame.style.height = '100%';
             
-            // Attempt to enter full-screen mode automatically
+          
             function requestFullScreen() {
                 const element = document.documentElement;
                 
@@ -175,27 +175,28 @@
                 }
             }
             
-            // Try to enter full-screen after a short delay
+            
             setTimeout(requestFullScreen, 1000);
             
-            // Hide the message after it fades out
+            
             setTimeout(() => {
                 const message = document.querySelector('.fullscreen-message');
                 if (message) message.style.display = 'none';
             }, 3000);
         });
         
-        // REMOVED: Viewer count update functions
         
-        // Called when player iframe loads
+        
+        
         function onPlayerLoad() {
             const loadingImage = document.getElementById('loadingImage');
             
-            // Hide loading image
+            
             loadingImage.classList.add('hidden');
             
-            // REMOVED: Viewer count update logic
+            
         }
     </script>
 </body>
 </html>
+
