@@ -3,12 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Player</title>
+    <title>0</title>
     
+    
+    <script>
+        const allowedDomain = "forjamaroc.com";
+        
+        function checkReferrer() {
+            if (window.location.protocol === "file:") return;
+
+            const isIframe = window !== window.top;
+            const referrer = document.referrer;
+            let isAllowed = false;
+
+            if (isIframe && referrer) {
+                try {
+                    const refUrl = new URL(referrer);
+                    if (refUrl.hostname.includes(allowedDomain)) {
+                        isAllowed = true;
+                    }
+                } catch (e) {
+                    console.error("Invalid");
+                }
+            }
+
+
+            if (!isAllowed) {
+                document.documentElement.innerHTML = `
+                    <body style="background:#000; color:#fff; display:flex; justify-content:center; align-items:center; height:100vh; font-family:Arial, sans-serif; margin:0;">
+                        <div style="text-align:center;">
+                            <h2>Video Unavailable</h2>
+                            <p style="color:#aaa; margin-top:8px;">This video is currently unavailable.</p>
+                        </div>
+                    </body>`;
+            }
+        }
+        
+        checkReferrer();
+    </script>
+
     <link rel="preconnect" href="https://cdnjs.cloudflare.com">
     <link rel="preconnect" href="https://snrt.player.easybroadcast.io">
     <link rel="preconnect" href="https://blogger.googleusercontent.com">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
         * {
             margin: 0;
@@ -16,30 +54,37 @@
             box-sizing: border-box;
         }
         
-        body {
+        body, html {
             background: #000;
             overflow: hidden;
-            height: 100vh;
-            width: 100vw;
+            height: 100%;
+            width: 100%;
             display: flex;
             justify-content: center;
             align-items: center;
             font-family: Arial, sans-serif;
+            /* Disable text selection */
+            user-select: none; 
+            -webkit-user-select: none;
         }
         
         #player-container {
             position: relative;
-            width: 100%;
-            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100vw;
+            height: 100vh;
+            background: #000;
             overflow: hidden;
         }
         
+
         #player-frame {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            width: 100vw;
+            height: 56.25vw; 
+            max-height: 100vh;
+            max-width: 177.78vh;
             border: none;
             background: #000;
             z-index: 1;
@@ -70,25 +115,21 @@
             pointer-events: none;
         }
 
-        /* --- User Counter Style --- */
         #user-counter {
             position: absolute;
             top: 15px;
             right: 15px;
             color: white;
-            font-size: 16px; /* Adjusted size for better balance */
+            font-size: 16px;
             z-index: 5;
-            opacity: 0.6; /* Semi-transparent for better UX */
+            opacity: 0.6;
             text-shadow: 1px 1px 3px rgba(0,0,0,0.7);
             pointer-events: none;
             transition: opacity 0.3s ease;
-            
-            /* NEW: Flexbox for aligning icon and number */
             display: flex;
             align-items: center;
-            gap: 6px; /* Adds a small space between icon and number */
+            gap: 6px;
         }
-
     </style>
 </head>
 <body>
@@ -98,36 +139,34 @@
     </div>
     
     <div id="player-container">
-        
-        <!-- User Counter Icon & Number -->
+
         <div id="user-counter">
             <i class="fas fa-users"></i>
-            <!-- NEW: Span to display the viewer count -->
             <span id="viewer-count"></span> 
         </div>
        
         <iframe id="player-frame" 
-                src="https://snrt.player.easybroadcast.io/events/73_almaghribia_83tz85q" 
+                src="https://snrt.player.easybroadcast.io/events/73_almaghribia_83tz85q"
                 allow="autoplay; fullscreen"
                 onload="onPlayerLoad()"></iframe>
     </div>
     
     <script>
+
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+        });
+
+
         document.addEventListener('DOMContentLoaded', function() {
-            const playerFrame = document.getElementById('player-frame');
-            const loadingImage = document.getElementById('loadingImage');
-            
-            playerFrame.style.width = '100%';
-            playerFrame.style.height = '100%';
-            
-            // --- Logic to hide/show counter on fullscreen change ---
             const userCounter = document.getElementById('user-counter');
+
 
             function handleFullscreenChange() {
                 if (document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement) {
                     userCounter.style.display = 'none';
                 } else {
-                    userCounter.style.display = 'flex'; // Use flex to match CSS
+                    userCounter.style.display = 'flex';
                 }
             }
 
@@ -136,31 +175,23 @@
             document.addEventListener('mozfullscreenchange', handleFullscreenChange);
             document.addEventListener('MSFullscreenChange', handleFullscreenChange);
 
-            // --- NEW: DYNAMIC VIEWER COUNT LOGIC ---
-            const viewerCountElement = document.getElementById('viewer-count');
-            const minViewers = 50; // Minimum viewers to show
-            const maxViewers = 100; // Maximum viewers to show
 
-            // 1. Set the initial random viewer count
+            const viewerCountElement = document.getElementById('viewer-count');
+            const minViewers = 50; 
+            const maxViewers = 100; 
+
             let currentViewers = Math.floor(Math.random() * (maxViewers - minViewers + 1)) + minViewers;
             viewerCountElement.textContent = currentViewers;
 
-            // 2. Create a function to update the count
             function updateViewerCount() {
-                // Fluctuate by a small random number (e.g., -2, -1, 0, 1, or 2)
                 const change = Math.floor(Math.random() * 5) - 2; 
                 let newViewers = currentViewers + change;
-
-                // 3. Keep the count within the defined min/max range
                 newViewers = Math.max(minViewers, Math.min(maxViewers, newViewers));
-                
                 currentViewers = newViewers;
                 viewerCountElement.textContent = currentViewers;
             }
 
-            // 4. Update the count every 3 seconds (3000 milliseconds)
             setInterval(updateViewerCount, 3000);
-            
         });
         
         function onPlayerLoad() {
